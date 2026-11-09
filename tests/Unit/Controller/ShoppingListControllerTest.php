@@ -1,0 +1,40 @@
+<?php declare(strict_types=1);
+
+namespace Tests\Unit\Controller;
+
+use App\Controller\ShoppingListController;
+use App\Repository\ShoppingListRepositoryInterface;
+use Override;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+#[CoversClass(ShoppingListController::class)]
+#[UsesClass(NotFoundHttpException::class)]
+final class ShoppingListControllerTest extends TestCase
+{
+    private ShoppingListController $controller;
+    private MockObject&ShoppingListRepositoryInterface $repository;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->repository = $this->createMock(ShoppingListRepositoryInterface::class);
+
+        $this->controller = new ShoppingListController($this->repository);
+    }
+
+    public function testWill404IfNoShoppingListFound(): void
+    {
+        $this->repository->expects(self::once())
+            ->method('fetchList')
+            ->with(7)
+            ->willReturn(null);
+
+        self::expectException(NotFoundHttpException::class);
+
+        $this->controller->viewList(7);
+    }
+}
