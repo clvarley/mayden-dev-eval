@@ -17,31 +17,69 @@ body {
     padding: 1rem;
 }
 
-.list-header__title {
-    margin: 0;
+.list-header {
+    display: flex;
+
+    .list-header__title {
+        margin: 0;
+    }
+
+    .list-header__return {
+        display: block;
+        margin-left: auto;
+        font-size: 0.75rem;
+        padding: 0.125rem 0.25rem;
+    }
 }
 
 .list-items {
     margin: 1rem 0 0;
-    padding: 0;
+    padding: 0;    
+}
 
-    li {
-        display: block;
-        line-height: 1;
-        padding: 0.5rem;
-        border: 1px solid #d1d1d1;
-        border-bottom-width: 0;
-        border-collapse: collapse;
-    }
+.list-item {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    padding: 0.5rem;
+    border: 1px solid #d1d1d1;
+    border-bottom-width: 0;
+    border-collapse: collapse;
 
-    li:first-of-type {
+    &:first-of-type {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
     }
 
-    li:last-of-type {
+    &:last-of-type {
         border-bottom-width: 1px;
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
     }
+
+    .list-item__count {
+        margin-left: auto;
+        font-size: 0.75rem;
+    }
+}
+
+.form-add {
+    margin: 1rem 0 0;
+    padding: 0.5rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+}
+
+.form-group {
+    .form-group__label {
+        display: block;
+    }
+
+    .form-group__input {
+        margin: 0.25rem 0 0;
+    }
+}
+
+.form-submit {
+    margin: 0.5rem 0 0;
 }

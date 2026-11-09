@@ -7,7 +7,14 @@ use App\Entity\ShoppingList;
 interface ShoppingListRepositoryInterface
 {
     /**
+     * @return ShoppingList[]
+     */
+    public function fetchAll(): array;
+
+    /**
      * @param positive-int $listId
      */
     public function fetchList(int $listId): ?ShoppingList;
+
+    public function updateList(ShoppingList $list): void;
 }

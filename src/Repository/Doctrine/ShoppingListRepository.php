@@ -16,10 +16,25 @@ final readonly class ShoppingListRepository
     }
 
     #[Override]
+    public function fetchAll(): array
+    {
+        return $this->doctrine
+            ->getRepository(ShoppingList::class)
+            ->findAll();
+    }
+
+    #[Override]
     public function fetchList(int $listId): ?ShoppingList
     {
         return $this->doctrine
             ->getRepository(ShoppingList::class)
             ->findOneBy(['id' => $listId]);
+    }
+
+    #[Override]
+    public function updateList(ShoppingList $list): void
+    {
+        $this->doctrine->persist($list);
+        $this->doctrine->flush();
     }
 }

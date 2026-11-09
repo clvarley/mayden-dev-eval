@@ -4,11 +4,32 @@
 <main class="wrapper">
     <header class="list-header">
         <h1 class="list-header__title" id="list-title">{{ title }}</h1>
+        <a class="list-header__return" href="{{ path('view.list.all') }}">Back</a>
     </header>
     <ul aria-labelledby="list-title" class="list-items">
         {% for item in items %}
-            <li>{{ item.text }}</li>
+            <li class="list-item">{{ item.text }}</li>
         {% endfor %}
     </ul>
+    <form 
+        class="form-add"
+        method="POST"
+        action="{{ path('form.list.add', { listId: listId }) }}"
+        enctype="application/x-www-form-urlencoded"
+    >
+        <div class="form-group">
+            <label class="form-group__label" for="input-new-item">Add new item</label>
+            <input
+                id="input-new-item"
+                class="form-group__input"
+                type="text"
+                name="text"
+                minlength="1"
+                maxlength="64"
+                placeholder="Butter, Milk, Soap..."
+            />
+        </div>
+        <button class="form-submit" type="submit">Save</button>
+    </form>
 </main>
 {% endblock %}

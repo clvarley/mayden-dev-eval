@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<main class="wrapper">
+    <header class="list-header">
+        <h1 class="list-header__title" id="list-title">Your current lists</h1>
+    </header>
+    <ul aria-labelledby="list-title" class="list-items">
+        {% for list in lists %}
+            <li class="list-item">
+                <a
+                    class="list-item__link"
+                    href="{{ path('view.list.single', { listId: list.getId() }) }}"
+                >{{ list.getTitle() }}</a>
+                <span class="list-item__count">{{ list.getItems().count() }} items</span>
+            </li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}
