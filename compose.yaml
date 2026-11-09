@@ -33,6 +33,6 @@ services:
     environment:
       MARIADB_RANDOM_ROOT_PASSWORD: "true"
       MARIADB_ROOT_HOST: localhost
-      MARIADB_DATABASE: wordpress
-      MARIADB_USER: wordpress
+      MARIADB_DATABASE: shopping
+      MARIADB_USER: symfony
       MARIADB_PASSWORD: password 
