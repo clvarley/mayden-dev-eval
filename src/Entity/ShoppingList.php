@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\ShoppingItem;
+
 final class ShoppingList
 {
     public function __construct(
@@ -18,5 +20,10 @@ final class ShoppingList
     public function getItems(): array
     {
         return $this->items;
+    }
+
+    public function addItem(ShoppingItem $item): void
+    {
+        $this->items[] = $item;
     }
 }
