@@ -4,6 +4,7 @@ namespace Tests\Unit\Entity;
 
 use App\Entity\ShoppingItem;
 use App\Entity\ShoppingList;
+use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -15,7 +16,7 @@ final class ShoppingListTest extends TestCase
 {
     private ShoppingList $shoppingList;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $this->shoppingList = new ShoppingList(
