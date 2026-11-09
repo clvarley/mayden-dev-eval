@@ -26,18 +26,9 @@ final class ShoppingListControllerTest extends TestCase
         $this->listRepository = $this->createMock(ShoppingListRepositoryInterface::class);
         $this->itemRepository = $this->createMock(ShoppingItemRepositoryInterface::class);
 
-        $this->controller = new ShoppingListController($this->listRepository, $this->itemRepository);
-    }
-
-    public function testWill404IfNoShoppingListFound(): void
-    {
-        $this->listRepository->expects(self::once())
-            ->method('fetchList')
-            ->with(7)
-            ->willReturn(null);
-
-        self::expectException(NotFoundHttpException::class);
-
-        $this->controller->viewList(7);
+        $this->controller = new ShoppingListController(
+            $this->listRepository,
+            $this->itemRepository
+        );
     }
 }

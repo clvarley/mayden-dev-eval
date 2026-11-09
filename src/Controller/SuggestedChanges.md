@@ -65,3 +65,13 @@ public function formDeleteItem(
  */
 public function fetchList(int $listId): ?ShoppingList;
 ```
+
+// templates/list-single.html.twig
+```twig
+{# NOTE: Separate out the list items into components (to match the B.E.M boundaries #}
+<ul aria-labelledby="list-title" class="list-items">
+    {% for item in items %}
+        {% include 'component/shopping-list-item.html.twig' with {item, listId} only %}
+    {% endfor %}
+</ul>
+```

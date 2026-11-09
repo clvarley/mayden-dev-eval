@@ -1,0 +1,23 @@
+<li class="list-item">
+    <span
+        {% if item.isComplete() %}class="list-item--complete"{% endif %}
+    >{{ item.text }}</span>
+    <form
+        class="form-item-actions"
+        method="POST"
+        enctype="application/x-www-form-urlencoded"
+    >
+        {% if not item.isComplete() %}
+            <button
+                formaction="{{ path('form.item.complete', { listId: listId, itemId: item.getId() }) }}"
+                type="submit"
+                class="form-item-actions__complete"
+            >Complete</button>
+        {% endif %}
+        <button
+            formaction="{{ path('form.item.delete', { listId: listId, itemId: item.getId() }) }}"
+            type="submit"
+            class="form-item-actions__delete"
+        >Remove</button>
+    </form>
+</li>
