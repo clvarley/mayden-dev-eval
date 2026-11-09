@@ -82,10 +82,17 @@
             "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "@schema"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "@auto-scripts",
+            "@setup"
+        ],
+        "setup": [
+            "@php bin/console asset-map:compile",
+            "@php bin/console doctrine:schema:update --force",
+            "@php bin/console doctrine:fixtures:load --no-interaction"
         ]
     },
     "conflict": {
