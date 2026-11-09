@@ -29,6 +29,7 @@ final class ShoppingList
     #[ORM\OneToMany(
         targetEntity: ShoppingItem::class,
         mappedBy: 'list_id',
+        cascade: ['PERSIST', 'REMOVE'],
     )]
     private Collection $items;
 

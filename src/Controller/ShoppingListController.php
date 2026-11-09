@@ -26,12 +26,10 @@ final class ShoppingListController extends AbstractController
             throw new NotFoundHttpException(self::ERROR_NO_LIST);
         }
 
-        return $this->render(
-            'list-single.twig',
-            [
-                'title' => $shoppingList->getTitle(),
-                'items' => $shoppingList->getItems(),
-            ],
-        );
+
+        return $this->render('list-single.twig', [
+            'title' => $shoppingList->getTitle(),
+            'items' => $shoppingList->getItems(),
+        ]);
     }
 }
