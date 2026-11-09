@@ -6,18 +6,17 @@ use App\Entity\ShoppingItem;
 use App\Entity\ShoppingList;
 use App\Repository\ShoppingItemRepositoryInterface;
 use App\Repository\ShoppingListRepositoryInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 use function strlen;
 
 final class ShoppingListController extends AbstractController
 {
-    private const ERROR_NO_LIST = 'No shopping lists exists for the current user';
-
     public function __construct(
         private ShoppingListRepositoryInterface $listRepository,
         private ShoppingItemRepositoryInterface $itemRepository,
@@ -27,26 +26,19 @@ final class ShoppingListController extends AbstractController
     #[Route('/', name: 'view.list.all')]
     public function viewLists(): Response
     {
-        $shoppingLists = $this->listRepository->fetchAll();
-
         return $this->render('list-all.html.twig', [
-            'lists' => $shoppingLists,
+            'lists' => $this->listRepository->fetchAll(),
         ]);
     }
 
     #[Route('/list/{listId<[0-9]+>}', name: 'view.list.single')]
-    public function viewList(int $listId): Response
-    {
-        $shoppingList = $this->listRepository->fetchList($listId);
-
-        if (null === $shoppingList) {
-            throw new NotFoundHttpException(self::ERROR_NO_LIST);
-        }
-
+    public function viewList(
+        #[MapEntity(id: 'listId')] ShoppingList $list,
+    ): Response {
         return $this->render('list-single.html.twig', [
-            'listId' => $shoppingList->getId(),
-            'title' => $shoppingList->getTitle(),
-            'items' => $shoppingList->getItems(),
+            'listId' => $list->getId(),
+            'title' => $list->getTitle(),
+            'items' => $list->getItems(),
         ]);
     }
 
@@ -54,80 +46,69 @@ final class ShoppingListController extends AbstractController
         name: 'form.list.add',
         methods: ['POST']
     )]
-    public function formAddNew(int $listId, Request $request): Response
-    {
-        $itemText = $request->request->get('text');
+    public function formAddNew(
+        #[MapEntity(id: 'listId')] ShoppingList $list,
+        Request $request,
+    ): Response {
+        $itemText = $request->request->getString('text');
 
-        if (null !== $itemText || self::validateNewItem($itemText)) {
-            $this->saveItemToList($listId, $itemText);
+        if (self::validateNewItem($itemText)) {
+            $this->saveItemToList($list, $itemText);
         }
 
-        return $this->redirectToRoute('view.list.single', ['listId' => $listId]);
+        return $this->redirectToListView($list);
     }
 
     #[Route('/list/{listId<[0-9]+>}/remove/{itemId<[0-9]+>}',
         name: 'form.item.delete',
         methods: ['POST']
     )]
-    public function formDeleteItem(int $listId, int $itemId): Response
-    {
-        $list = $this->listRepository->fetchList($listId);
+    public function formDeleteItem(
+        #[MapEntity(id: 'listId')] ShoppingList $list,
+        #[MapEntity(id: 'itemId')] ShoppingItem $item,
+    ): Response {
+        $list->getItems()->removeElement($item);
 
-        if (null !== $list) {
-            $this->removeItemFromList($list, $itemId);
-        }
+        $this->listRepository->updateList($list);
 
-        return $this->redirectToRoute('view.list.single', ['listId' => $listId]);
+        return $this->redirectToListView($list);
     }
 
     #[Route('/list/{listId<[0-9]+>}/complete/{itemId<[0-9]+>}',
         name: 'form.item.complete',
         methods: ['POST'],
     )]
-    public function formCompleteItem(int $listId, int $itemId): Response
-    {
-        $list = $this->listRepository->fetchList($listId);
-
-        if (null !== $list) {
-            $this->markItemAsComplete($list, $itemId);
+    public function formCompleteItem(
+        #[MapEntity(id: 'listId')] ShoppingList $list,
+        #[MapEntity(id: 'itemId')] ShoppingItem $item,
+    ): Response {
+        // List must own item to allow this operation
+        if ($list->getItems()->contains($item)) {
+            $this->markItemAsComplete($item);
         }
 
-        return $this->redirectToRoute('view.list.single', ['listId' => $listId]);
+        return $this->redirectToListView($list);
     }
 
-    private function saveItemToList(int $listId, string $itemText): void
+    private function saveItemToList(ShoppingList $list, string $itemText): void
     {
-        $list = $this->listRepository->fetchList($listId);
-
-        if (null === $list) {
-            return;
-        }
-
         $list->addItem(new ShoppingItem($itemText));
 
         $this->listRepository->updateList($list);
     }
 
-    private function removeItemFromList(ShoppingList $list, int $itemId): void
+    private function markItemAsComplete(ShoppingItem $item): void
     {
-        $itemToRemove = $list->removeItemById($itemId);
-
-        if (null !== $itemToRemove) {
-            $this->itemRepository->deleteItem($itemToRemove);
-        }
-    }
-
-    private function markItemAsComplete(ShoppingList $list, int $itemId): void
-    {
-        $item = $list->getItemById($itemId);
-
-        if (null === $item) {
-            return;
-        }
-
         $item->markAsComplete();
 
         $this->itemRepository->updateItem($item);
+    }
+
+    private function redirectToListView(ShoppingList $list): RedirectResponse
+    {
+        return $this->redirectToRoute('view.list.single', [
+            'listId' => $list->getId(),
+        ]);
     }
 
     private static function validateNewItem(string $itemText): bool

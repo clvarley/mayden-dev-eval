@@ -20,11 +20,4 @@ final readonly class ShoppingItemRepository implements ShoppingItemRepositoryInt
         $this->doctrine->persist($item);
         $this->doctrine->flush();
     }
-
-    #[Override]
-    public function deleteItem(ShoppingItem $item): void
-    {
-        $this->doctrine->remove($item);
-        $this->doctrine->flush();
-    }
 }

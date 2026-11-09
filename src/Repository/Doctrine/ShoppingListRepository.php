@@ -23,14 +23,6 @@ final readonly class ShoppingListRepository implements ShoppingListRepositoryInt
     }
 
     #[Override]
-    public function fetchList(int $listId): ?ShoppingList
-    {
-        return $this->doctrine
-            ->getRepository(ShoppingList::class)
-            ->findOneBy(['id' => $listId]);
-    }
-
-    #[Override]
     public function updateList(ShoppingList $list): void
     {
         $this->doctrine->persist($list);
