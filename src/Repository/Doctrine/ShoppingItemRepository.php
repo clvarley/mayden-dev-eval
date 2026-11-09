@@ -14,6 +14,12 @@ final readonly class ShoppingItemRepository
     ) {
     }
 
+    public function updateItem(ShoppingItem $item): void
+    {
+        $this->doctrine->persist($item);
+        $this->doctrine->flush();
+    }
+
     public function deleteItem(ShoppingItem $item): void
     {
         $this->doctrine->remove($item);

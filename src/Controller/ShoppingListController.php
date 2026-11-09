@@ -80,6 +80,21 @@ final class ShoppingListController extends AbstractController
         return $this->redirectToRoute('view.list.single', ['listId' => $listId]);
     }
 
+    #[Route('/list/{listId<[0-9]+>}/complete/{itemId<[0-9]+>}',
+        name: 'form.item.complete',
+        methods: ['POST'],
+    )]
+    public function formCompleteItem(int $listId, int $itemId): Response
+    {
+        $list = $this->listRepository->fetchList($listId);
+
+        if (null !== $list) {
+            $this->markItemAsComplete($list, $itemId);
+        }
+
+        return $this->redirectToRoute('view.list.single', ['listId' => $listId]);
+    }
+
     private function saveItemToList(int $listId, string $itemText): void
     {
         $list = $this->listRepository->fetchList($listId);
@@ -100,6 +115,19 @@ final class ShoppingListController extends AbstractController
         if (null !== $itemToRemove) {
             $this->itemRepository->deleteItem($itemToRemove);
         }
+    }
+
+    private function markItemAsComplete(ShoppingList $list, int $itemId): void
+    {
+        $item = $list->getItemById($itemId);
+
+        if (null === $item) {
+            return;
+        }
+
+        $item->markAsComplete();
+
+        $this->itemRepository->updateItem($item);
     }
 
     private static function validateNewItem(string $itemText): bool

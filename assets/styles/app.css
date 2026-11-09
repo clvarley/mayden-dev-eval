@@ -57,6 +57,11 @@ body {
         border-bottom-right-radius: 8px;
     }
 
+    .list-item--complete {
+        text-decoration: line-through;
+        color: #535353;
+    }
+
     .list-item__count {
         margin-left: auto;
         font-size: 0.75rem;
@@ -84,6 +89,10 @@ body {
     }
 }
 
-.form-delete {
+.form-item-actions {
     margin-left: auto;
+
+    .form-item-actions__delete {
+        margin-left: 0.5rem;
+    }
 }

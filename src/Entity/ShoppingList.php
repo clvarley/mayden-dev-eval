@@ -66,12 +66,16 @@ final class ShoppingList
         $item->setList($this);
     }
 
+    public function getItemById(int $itemId): ?ShoppingItem
+    {
+        return $this->items->findFirst(
+            static fn ($_, ShoppingItem $item): bool => $item->getId() === $itemId
+        );
+    }
+
     public function removeItemById(int $itemId): ?ShoppingItem
     {
-        $item = $this->items
-            ->findFirst(
-                static fn ($_, ShoppingItem $item): bool => $item->getId() === $itemId
-            );
+        $item = $this->getItemById($itemId);
 
         if (null !== $item) {
             $this->items->removeElement($item);

@@ -6,5 +6,7 @@ use App\Entity\ShoppingItem;
 
 interface ShoppingItemRepositoryInterface
 {
+    public function updateItem(ShoppingItem $item): void;
+
     public function deleteItem(ShoppingItem $item): void;
 }
