@@ -3,13 +3,44 @@
 namespace App\Entity;
 
 use App\Entity\ShoppingItem;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping AS ORM;
 
+#[ORM\Entity]
+#[ORM\Table('shoppingList')]
 final class ShoppingList
 {
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    private ?int $id = null;
+
+    #[ORM\Column(
+        type: 'string',
+        length: 64,
+        nullable: false,
+    )]
+    private string $title;
+
+    /**
+     * @var Collection<ShoppingItem> $items
+     */
+    #[ORM\OneToMany(
+        targetEntity: ShoppingItem::class,
+        mappedBy: 'list_id',
+    )]
+    private Collection $items;
+
+    /**
+     * @param ShoppingItem[] $items
+     */
     public function __construct(
-        private string $title,
-        private array $items = [],
+        string $title,
+        array $items = [],
     ) {
+        $this->title = $title;
+        $this->items = new ArrayCollection($items);
     }
 
     public function getTitle(): string
@@ -17,13 +48,13 @@ final class ShoppingList
         return $this->title;
     }
 
-    public function getItems(): array
+    public function getItems(): Collection
     {
         return $this->items;
     }
 
     public function addItem(ShoppingItem $item): void
     {
-        $this->items[] = $item;
+        $this->items->add($item);
     }
 }
