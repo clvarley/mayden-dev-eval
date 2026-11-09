@@ -28,7 +28,7 @@ final class ShoppingList
      */
     #[ORM\OneToMany(
         targetEntity: ShoppingItem::class,
-        mappedBy: 'list_id',
+        mappedBy: 'list',
         cascade: ['PERSIST', 'REMOVE'],
     )]
     private Collection $items;
@@ -57,5 +57,7 @@ final class ShoppingList
     public function addItem(ShoppingItem $item): void
     {
         $this->items->add($item);
+
+        $item->setList($this);
     }
 }

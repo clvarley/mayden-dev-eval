@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 id="list-title">{{ title }}</h1>
+<ul aria-labelledby="list-title">
+    {% for item in items %}
+        <li>{{ item.text }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

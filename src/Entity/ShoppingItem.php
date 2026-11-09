@@ -25,6 +25,12 @@ final class ShoppingItem implements Stringable
     #[ORM\ManyToOne(
         targetEntity: ShoppingList::class,
         inversedBy: 'items',
+        cascade: ['PERSIST', 'REMOVE'],
+    )]
+    #[ORM\JoinColumn(
+        name: 'list_id',
+        referencedColumnName: 'id',
+        nullable: false,
     )]
     private ShoppingList $list;
 
@@ -51,6 +57,11 @@ final class ShoppingItem implements Stringable
     public function markAsComplete(): void
     {
         $this->complete = true;
+    }
+
+    public function setList(ShoppingList $list): void
+    {
+        $this->list = $list;
     }
 
     #[Override]
