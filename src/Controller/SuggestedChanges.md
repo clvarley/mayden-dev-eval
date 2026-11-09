@@ -75,3 +75,29 @@ public function fetchList(int $listId): ?ShoppingList;
     {% endfor %}
 </ul>
 ```
+
+// config.routes.yml
+```yml
+# NOTE: List all routes centrally instead of spread out with attributes
+controllers:
+    resource: routing.controllers
+```
+
+// Controller\ShoppingListController.php
+```php
+// NOTE: Shared requirements can be placed on a class-level attribute to apply to every route
+#[Route(requirements: [
+    'listId' => Requirement::POSITIVE_INT,
+    'itemId' => Requirement::POSITIVE_INT,
+])]
+final class ShoppingListController extends AbstractController
+```
+
+// Controller/ShoppingListController.php
+```php
+// NOTE: Move all interaction into dedicated service class
+public function __construct(
+    private ShoppingListUpdater $listUpdater,
+) {
+}
+```

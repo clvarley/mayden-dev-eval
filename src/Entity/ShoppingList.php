@@ -55,6 +55,9 @@ final class ShoppingList
         return $this->title;
     }
 
+    /**
+     * @return Collection<int, ShoppingItem>
+     */
     public function getItems(): Collection
     {
         return $this->items;

@@ -4,34 +4,29 @@ namespace App\Controller;
 
 use App\Entity\ShoppingItem;
 use App\Entity\ShoppingList;
-use App\Repository\ShoppingItemRepositoryInterface;
-use App\Repository\ShoppingListRepositoryInterface;
+use App\Service\ShoppingListUpdater;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 use function strlen;
 
+#[Route(requirements: [
+    'listId' => Requirement::POSITIVE_INT,
+    'itemId' => Requirement::POSITIVE_INT,
+])]
 final class ShoppingListController extends AbstractController
 {
     public function __construct(
-        private ShoppingListRepositoryInterface $listRepository,
-        private ShoppingItemRepositoryInterface $itemRepository,
+        private ShoppingListUpdater $listUpdater,
     ) {
     }
 
-    #[Route('/', name: 'view.list.all')]
-    public function viewLists(): Response
-    {
-        return $this->render('list-all.html.twig', [
-            'lists' => $this->listRepository->fetchAll(),
-        ]);
-    }
-
-    #[Route('/list/{listId<[0-9]+>}', name: 'view.list.single')]
+    #[Route('/list/{listId}', name: 'view.list.single')]
     public function viewList(
         #[MapEntity(id: 'listId')] ShoppingList $list,
     ): Response {
@@ -42,7 +37,7 @@ final class ShoppingListController extends AbstractController
         ]);
     }
 
-    #[Route('/list/{listId<[0-9]+>}/add',
+    #[Route('/list/{listId}/add',
         name: 'form.list.add',
         methods: ['POST']
     )]
@@ -53,13 +48,13 @@ final class ShoppingListController extends AbstractController
         $itemText = $request->request->getString('text');
 
         if (self::validateNewItem($itemText)) {
-            $this->saveItemToList($list, $itemText);
+            $this->listUpdater->addItemToList($list, $itemText);
         }
 
         return $this->redirectToListView($list);
     }
 
-    #[Route('/list/{listId<[0-9]+>}/remove/{itemId<[0-9]+>}',
+    #[Route('/list/{listId}/remove/{itemId}',
         name: 'form.item.delete',
         methods: ['POST']
     )]
@@ -67,14 +62,12 @@ final class ShoppingListController extends AbstractController
         #[MapEntity(id: 'listId')] ShoppingList $list,
         #[MapEntity(id: 'itemId')] ShoppingItem $item,
     ): Response {
-        $list->getItems()->removeElement($item);
-
-        $this->listRepository->updateList($list);
+        $this->listUpdater->removeItemFromList($list, $item);
 
         return $this->redirectToListView($list);
     }
 
-    #[Route('/list/{listId<[0-9]+>}/complete/{itemId<[0-9]+>}',
+    #[Route('/list/{listId}/complete/{itemId}',
         name: 'form.item.complete',
         methods: ['POST'],
     )]
@@ -84,25 +77,12 @@ final class ShoppingListController extends AbstractController
     ): Response {
         // List must own item to allow this operation
         if ($list->getItems()->contains($item)) {
-            $this->markItemAsComplete($item);
+            $this->listUpdater->markItemAsComplete($item);
         }
 
         return $this->redirectToListView($list);
     }
 
-    private function saveItemToList(ShoppingList $list, string $itemText): void
-    {
-        $list->addItem(new ShoppingItem($itemText));
-
-        $this->listRepository->updateList($list);
-    }
-
-    private function markItemAsComplete(ShoppingItem $item): void
-    {
-        $item->markAsComplete();
-
-        $this->itemRepository->updateItem($item);
-    }
 
     private function redirectToListView(ShoppingList $list): RedirectResponse
     {
