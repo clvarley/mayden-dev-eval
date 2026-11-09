@@ -2,7 +2,7 @@
 
 namespace Test\Unit\Entity;
 
-use App\Enity\ShoppingItem;
+use App\Entity\ShoppingItem;
 use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
