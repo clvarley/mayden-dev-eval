@@ -29,7 +29,7 @@ final class ShoppingList
     #[ORM\OneToMany(
         targetEntity: ShoppingItem::class,
         mappedBy: 'list',
-        cascade: ['PERSIST', 'REMOVE'],
+        cascade: ['PERSIST'],
     )]
     private Collection $items;
 
@@ -64,5 +64,19 @@ final class ShoppingList
         $this->items->add($item);
 
         $item->setList($this);
+    }
+
+    public function removeItemById(int $itemId): ?ShoppingItem
+    {
+        $item = $this->items
+            ->findFirst(
+                static fn ($_, ShoppingItem $item): bool => $item->getId() === $itemId
+            );
+
+        if (null !== $item) {
+            $this->items->removeElement($item);
+        }
+
+        return $item;
     }
 }

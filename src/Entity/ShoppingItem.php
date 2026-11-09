@@ -25,7 +25,6 @@ final class ShoppingItem implements Stringable
     #[ORM\ManyToOne(
         targetEntity: ShoppingList::class,
         inversedBy: 'items',
-        cascade: ['PERSIST', 'REMOVE'],
     )]
     #[ORM\JoinColumn(
         name: 'list_id',
@@ -42,6 +41,11 @@ final class ShoppingItem implements Stringable
         )]
         private string $text,
     ) {
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getText(): string

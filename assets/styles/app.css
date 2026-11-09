@@ -68,6 +68,10 @@ body {
     padding: 0.5rem;
     border: 1px solid #d1d1d1;
     border-radius: 8px;
+
+    .form-add__submit {
+        margin: 0.5rem 0 0;
+    }
 }
 
 .form-group {
@@ -80,6 +84,6 @@ body {
     }
 }
 
-.form-submit {
-    margin: 0.5rem 0 0;
+.form-delete {
+    margin-left: auto;
 }
