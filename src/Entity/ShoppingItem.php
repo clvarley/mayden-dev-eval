@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Override;
 use Stringable;
 

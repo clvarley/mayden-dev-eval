@@ -7,8 +7,7 @@ use App\Repository\ShoppingListRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
-final readonly class ShoppingListRepository
-    implements ShoppingListRepositoryInterface
+final readonly class ShoppingListRepository implements ShoppingListRepositoryInterface
 {
     public function __construct(
         private EntityManagerInterface $doctrine,
