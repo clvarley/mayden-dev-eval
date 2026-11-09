@@ -8,11 +8,13 @@ use App\Repository\ShoppingItemRepositoryInterface;
 use App\Repository\ShoppingListRepositoryInterface;
 use App\Service\ShoppingListUpdater;
 use Override;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(ShoppingListUpdater::class)]
 #[UsesClass(ShoppingItem::class)]
 #[UsesClass(ShoppingList::class)]
