@@ -38,7 +38,7 @@ final class ShoppingListController extends AbstractController
     }
 
     #[Route('/list/{listId}/add',
-        name: 'form.list.add',
+        name: 'form.item.create',
         methods: ['POST']
     )]
     public function formAddNew(

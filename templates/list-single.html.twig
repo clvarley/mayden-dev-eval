@@ -14,7 +14,7 @@
     <form 
         class="form-add"
         method="POST"
-        action="{{ path('form.list.add', { listId: listId }) }}"
+        action="{{ path('form.item.create', { listId: listId }) }}"
         enctype="application/x-www-form-urlencoded"
     >
         <div class="form-group">
@@ -24,6 +24,7 @@
                 class="form-group__input"
                 type="text"
                 name="text"
+                required
                 minlength="1"
                 maxlength="64"
                 placeholder="Butter, Milk, Soap..."

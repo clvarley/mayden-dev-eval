@@ -101,3 +101,17 @@ public function __construct(
 ) {
 }
 ```
+
+// list-single.html.twig
+```html
+<input
+    id="input-new-item"
+    class="form-group__input"
+    type="text"
+    name="text"
+    required
+    minlength="1"
+    maxlength="64"
+    placeholder="Butter, Milk, Soap..."
+/>
+```
