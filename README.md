@@ -45,3 +45,13 @@ delete items on that list.
 | `docker-compose exec php bin/console doctrine:schema:update --force --dump-sql` | Perform a manual schema migration |
 | `docker-compose exec php bin/console doctrine:fixtures:load`                    | Seed the database with dummy data |
 | `docker-compose exec php bin/console asset-map:compile`                         | Compile and move frontend assets |
+
+## Suggested Changes
+
+Annoyingly I was only able to track 4.5 hours toward the project, but after submission I did think of a few more changes I _wish_ I had made.
+
+In the interest of fairness I haven't touched the `main` branch since submission (the commit that added this section notwithstanding).
+
+However, an updated version can be found on the `develop` branch with a changelog available at PR https://github.com/clvarley/mayden-dev-eval/pull/1.
+
+Thank you for your time and consideration :)
