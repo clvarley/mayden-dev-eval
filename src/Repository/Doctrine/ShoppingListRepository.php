@@ -7,8 +7,7 @@ use App\Repository\ShoppingListRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
-final readonly class ShoppingListRepository
-    implements ShoppingListRepositoryInterface
+final readonly class ShoppingListRepository implements ShoppingListRepositoryInterface
 {
     public function __construct(
         private EntityManagerInterface $doctrine,
@@ -21,14 +20,6 @@ final readonly class ShoppingListRepository
         return $this->doctrine
             ->getRepository(ShoppingList::class)
             ->findAll();
-    }
-
-    #[Override]
-    public function fetchList(int $listId): ?ShoppingList
-    {
-        return $this->doctrine
-            ->getRepository(ShoppingList::class)
-            ->findOneBy(['id' => $listId]);
     }
 
     #[Override]

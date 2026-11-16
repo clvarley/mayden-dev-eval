@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Entity\ShoppingItem;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table('shoppingList')]
@@ -24,17 +24,18 @@ final class ShoppingList
     private string $title;
 
     /**
-     * @var Collection<ShoppingItem> $items
+     * @var Collection<int, ShoppingItem> $items
      */
     #[ORM\OneToMany(
         targetEntity: ShoppingItem::class,
         mappedBy: 'list',
-        cascade: ['PERSIST'],
+        cascade: ['PERSIST', 'REMOVE', 'DETACH'],
+        orphanRemoval: true,
     )]
     private Collection $items;
 
     /**
-     * @param ShoppingItem[] $items
+     * @param list<ShoppingItem> $items
      */
     public function __construct(
         string $title,
@@ -54,6 +55,9 @@ final class ShoppingList
         return $this->title;
     }
 
+    /**
+     * @return Collection<int, ShoppingItem>
+     */
     public function getItems(): Collection
     {
         return $this->items;
@@ -64,23 +68,5 @@ final class ShoppingList
         $this->items->add($item);
 
         $item->setList($this);
-    }
-
-    public function getItemById(int $itemId): ?ShoppingItem
-    {
-        return $this->items->findFirst(
-            static fn ($_, ShoppingItem $item): bool => $item->getId() === $itemId
-        );
-    }
-
-    public function removeItemById(int $itemId): ?ShoppingItem
-    {
-        $item = $this->getItemById($itemId);
-
-        if (null !== $item) {
-            $this->items->removeElement($item);
-        }
-
-        return $item;
     }
 }

@@ -19,6 +19,7 @@ return (new PhpCsFixer\Config())
         // File layout
         'declare_strict_types' => true,
         'blank_line_after_opening_tag' => false,
+        'linebreak_after_opening_tag' => false,
         'no_closing_tag' => true,
 
         // Imports

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Override;
 use Stringable;
 
@@ -33,14 +33,16 @@ final class ShoppingItem implements Stringable
     )]
     private ShoppingList $list;
 
-    public function __construct(
-        #[ORM\Column(
-            type: 'string',
-            length: 64,
-            nullable: false,
-        )]
-        private string $text,
-    ) {
+    #[ORM\Column(
+        type: 'string',
+        length: 64,
+        nullable: false,
+    )]
+    private string $text;
+
+    public function __construct(string $text)
+    {
+        $this->text = $text;
     }
 
     public function getId(): ?int
